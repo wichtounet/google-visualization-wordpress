@@ -35,8 +35,15 @@ function add_visualization_js() {
 // Add hook for front-end <head></head>
 add_action('wp_head', 'add_visualization_js');
 
+// Store the IDs of the generated graphs
 $graph_ids = array();
 
+// Create a DIV placeholder for the Visualization API
+function new_div( $id, $width, $height) {
+    return "<div id=\"" . $id . "\" style=\"width: " . $width . "; height: " . $height . ";\"></div>";
+}
+
+// Generate a bar chart
 function bar_chart_shortcode( $atts, $content = null ) {
     //use global variables
     global $graph_ids;
@@ -53,7 +60,7 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $graph_content = "";
 
     //Generate the div
-    $graph_content = $graph_content . "<div id=\"" . $options['id'] . "\" style=\"width: " . $options['width'] . "; height: " . $options['height'] . ";\"></div>";
+    $graph_content = $graph_content . new_div($options['id'], $options['width'], $options['height']);
 
     return $graph_content;
 }
@@ -62,6 +69,7 @@ function line_chart_shortcode( $atts, $content = null ) {
     return "Unimplemented";
 }
 
+//Add the short codes for the charts
 add_shortcode( 'line_chart', 'line_chart_shortcode' );
 add_shortcode( 'bar_chart', 'bar_chart_shortcode' );
 
