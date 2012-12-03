@@ -27,3 +27,17 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 ?>
+
+<?php
+
+function add_visualization_js() {
+    echo '<script type="text/javascript" src="http://www.google.com/jsapi"></script>';
+    echo '<script type="text/javascript">';
+    echo 'google.load('visualization', '1', {packages: ['corechart']});';
+    echo '</script>';
+}
+
+// Add hook for front-end <head></head>
+add_action('wp_head', 'add_visualization_js');
+
+?>
