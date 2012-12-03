@@ -7,10 +7,8 @@
  * Author: Baptiste Wicht
  * Author URI: http://www.baptiste-wicht.com
  * License: GPL2
- * */
-?>
+*/
 
-<?php
 /*  Copyright 2012 Baptiste Wicht (email: baptiste.wicht@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
@@ -26,18 +24,21 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-
-<?php
 
 function add_visualization_js() {
     echo '<script type="text/javascript" src="http://www.google.com/jsapi"></script>';
     echo '<script type="text/javascript">';
-    echo 'google.load('visualization', '1', {packages: ['corechart']});';
+    echo 'google.load(\'visualization\', \'1\', {packages: [\'corechart\']});';
     echo '</script>';
 }
 
 // Add hook for front-end <head></head>
 add_action('wp_head', 'add_visualization_js');
+
+function line_chart_shortcode( $atts, $content = null ) {
+    return "";
+}
+
+add_shortcode( 'line_chart_shortcode', 'line_chart_shortcode' );
 
 ?>
