@@ -35,10 +35,15 @@ function add_visualization_js() {
 // Add hook for front-end <head></head>
 add_action('wp_head', 'add_visualization_js');
 
+function bar_chart_shortcode( $atts, $content = null ) {
+    return "Unimplemented";
+}
+
 function line_chart_shortcode( $atts, $content = null ) {
     return "Unimplemented";
 }
 
 add_shortcode( 'line_chart', 'line_chart_shortcode' );
+add_shortcode( 'bar_chart', 'bar_chart_shortcode' );
 
 ?>
