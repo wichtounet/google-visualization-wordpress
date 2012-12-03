@@ -36,9 +36,9 @@ function add_visualization_js() {
 add_action('wp_head', 'add_visualization_js');
 
 function line_chart_shortcode( $atts, $content = null ) {
-    return "";
+    return "Unimplemented";
 }
 
-add_shortcode( 'line_chart_shortcode', 'line_chart_shortcode' );
+add_shortcode( 'line_chart', 'line_chart_shortcode' );
 
 ?>
