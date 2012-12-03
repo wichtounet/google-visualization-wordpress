@@ -1,4 +1,4 @@
-google-visualization-wordpress
-==============================
+Google Visualization for Wordpress
+==================================
 
-Google Visualization Wordpress Plugin
+This plugins adds new shortcodes to Wordpress to integrate fancy graphs generated with the Google Visualization API. 
