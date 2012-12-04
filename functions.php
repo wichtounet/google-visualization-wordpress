@@ -26,26 +26,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function add_visualization_js() {
+//Add JS loading to head
+
+function visualization_load_js() {
     echo '<script type="text/javascript" src="http://www.google.com/jsapi"></script>';
     echo '<script type="text/javascript">';
     echo 'google.load(\'visualization\', \'1\', {packages: [\'corechart\']});';
     echo '</script>';
 }
 
-// Add hook for front-end <head></head>
-add_action('wp_head', 'add_visualization_js');
-
 // Store the IDs of the generated graphs
 $graph_ids = array();
 
 // Create a DIV placeholder for the Visualization API
-function new_div( $id, $width, $height) {
+
+function visualization_new_div( $id, $width, $height) {
     return "<div id=\"" . $id . "\" style=\"width: " . $width . "; height: " . $height . ";\"></div>";
 }
 
 // Generate a bar chart
-function bar_chart_shortcode( $atts, $content = null ) {
+
+function visualization_bar_chart_shortcode( $atts, $content = null ) {
     //use global variables
     global $graph_ids;
 
@@ -55,8 +56,8 @@ function bar_chart_shortcode( $atts, $content = null ) {
             'title' => "Graph",
             
             //By default the axis titles are empty
-            'h-title' => "",
-            'v-title' => "",
+            'h_title' => "",
+            'v_title' => "",
             
             //By default give iterated id to the graph
             'id' => "graph_id" + count($graph_ids),
@@ -68,7 +69,7 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $graph_content = "";
 
     //Generate the div
-    $graph_content .= new_div($options['id'], $options['width'], $options['height']);
+    $graph_content .= visualization_new_div($options['id'], $options['width'], $options['height']);
 
     //Generate the Javascript for the graph
     $graph_draw_js = "";
@@ -88,14 +89,14 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $graph_draw_js .= 'width:\'' . $options['width'] . '\',';
     $graph_draw_js .= 'height:\'' . $options['height'] . '\',';
 
-    if(!empty($options['h-title'])){
-        $graph_draw_js .= 'hAxis: {title: "' . $options['h-title'] . '"},';
+    if(!empty($options['h_title'])){
+        $graph_draw_js .= 'hAxis: {title: "' . $options['h_title'] . '"},';
     }
 
-    if(!empty($options['v-title'])){
-        $graph_draw_js .= 'vAxis: {title: "' . $options['v-title'] . '", minValue: 0}'
+    if(!empty($options['v_title'])){
+        $graph_draw_js .= 'vAxis: {title: "' . $options['v_title'] . '", minValue: 0}';
     } else {
-        $graph_draw_js .= 'vAxis: {minValue: 0}'
+        $graph_draw_js .= 'vAxis: {minValue: 0}';
     }
 
     $graph_draw_js .= '}';
@@ -110,11 +111,15 @@ function bar_chart_shortcode( $atts, $content = null ) {
     return $graph_content;
 }
 
-function line_chart_shortcode( $atts, $content = null ) {
+//Generate a line chart
+
+function visualization_line_chart_shortcode( $atts, $content = null ) {
     return "Unimplemented";
 }
 
-function load_graphs_js($content) {
+//Filter to add JS to load all the graphs previously entered as shortcodes
+
+function visualization_load_graphs_js($content) {
     //use global variables
     global $graph_ids;
 
@@ -139,11 +144,14 @@ function load_graphs_js($content) {
     return $content;
 }
 
+//Add hook for front-end <head></head>
+add_action('wp_head', 'visualization_load_js');
+
 //Add the short codes for the charts
-add_shortcode( 'line_chart', 'line_chart_shortcode' );
-add_shortcode( 'bar_chart', 'bar_chart_shortcode' );
+add_shortcode( 'line_chart', 'visualization_line_chart_shortcode' );
+add_shortcode( 'bar_chart', 'visualization_bar_chart_shortcode' );
  
 //Add filter to edit the contents of the post
-add_filter('the_content', 'load_graphs_js', 1000);
+add_filter('the_content', 'visualization_load_graphs_js', 1000);
 
 ?>
