@@ -51,6 +51,7 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $options = shortcode_atts( array(
             'width' => "400px",
             'height' => "300px",
+            'title' => "Graph",
             'id' => "graph_id" + count($graph_ids), //By default give iterated id to the graph
         ), $atts );
 
@@ -60,7 +61,32 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $graph_content = "";
 
     //Generate the div
-    $graph_content = $graph_content . new_div($options['id'], $options['width'], $options['height']);
+    $graph_content .= new_div($options['id'], $options['width'], $options['height']);
+
+    //Generate the Javascript for the graph
+    $graph_draw_js = "";
+
+    $graph_draw_js .= '<script type="text/javascript">';
+    $graph_draw_js .= 'function draw_' . $options['id'] . '(){';
+
+    $graph_draw_js .= 'var data = google.visualization.arrayToDataTable([';
+    $graph_draw_js .= str_replace(array('<br/>', '<br />'), '', $content);
+    $graph_draw_js .= ']);';
+
+    $graph_draw_js .= 'new google.visualization.ColumnChart(document.getElementById(\'' . $options['id'] . '\')).';
+    $graph_draw_js .= 'draw(data, ';
+
+    $graph_draw_js .= '{title:"' . $options['title'] . '",';
+    $graph_draw_js .= 'width:\'' . $options['width'] . '\', height:\'' . $options['height'] . '\',';
+    $graph_draw_js .= 'hAxis: {title: "Options"},';
+    $graph_draw_js .= 'vAxis: {title: "Seconds", minValue: 0}}';
+
+    $graph_draw_js .= ');';
+
+    $graph_draw_js .= '}';
+    $graph_draw_js .= '</script>';
+
+    $graph_content .= $graph_draw_js;
 
     return $graph_content;
 }
@@ -69,8 +95,36 @@ function line_chart_shortcode( $atts, $content = null ) {
     return "Unimplemented";
 }
 
+function load_graphs_js($content) {
+    //use global variables
+    global $graph_ids;
+
+    if(is_single()) {
+        $graph_draw_js = "";
+        
+        $graph_draw_js .= '<script type="text/javascript">';
+        $graph_draw_js .= 'function draw_visualization(){';
+
+        foreach($graph_ids as $graph){
+            $graph_draw_js .= 'draw_' . $graph . '();';
+        }
+
+        $graph_draw_js .= '}';
+        $graph_draw_js .= 'google.setOnLoadCallback(draw_visualization);';
+        $graph_draw_js .= '</script>';
+
+        //Add the graph drawing JS to the content of the post
+        $content .= $graph_draw_js;
+    }
+
+    return $content;
+}
+
 //Add the short codes for the charts
 add_shortcode( 'line_chart', 'line_chart_shortcode' );
 add_shortcode( 'bar_chart', 'bar_chart_shortcode' );
+ 
+//Add filter to edit the contents of the post
+add_filter('the_content', 'load_graphs_js', 1000);
 
 ?>
