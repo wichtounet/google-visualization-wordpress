@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Plugin Name: Google Visualization Charts
  * Plugin URI: https://github.com/wichtounet/google-visualization-wordpress 
