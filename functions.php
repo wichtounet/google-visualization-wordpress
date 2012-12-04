@@ -53,7 +53,13 @@ function bar_chart_shortcode( $atts, $content = null ) {
             'width' => "400px",
             'height' => "300px",
             'title' => "Graph",
-            'id' => "graph_id" + count($graph_ids), //By default give iterated id to the graph
+            
+            //By default the axis titles are empty
+            'h-title' => "",
+            'v-title' => "",
+            
+            //By default give iterated id to the graph
+            'id' => "graph_id" + count($graph_ids),
         ), $atts );
 
     //Register the graph ID
@@ -77,10 +83,22 @@ function bar_chart_shortcode( $atts, $content = null ) {
     $graph_draw_js .= 'new google.visualization.ColumnChart(document.getElementById(\'' . $options['id'] . '\')).';
     $graph_draw_js .= 'draw(data, ';
 
-    $graph_draw_js .= '{title:"' . $options['title'] . '",';
-    $graph_draw_js .= 'width:\'' . $options['width'] . '\', height:\'' . $options['height'] . '\',';
-    $graph_draw_js .= 'hAxis: {title: "Options"},';
-    $graph_draw_js .= 'vAxis: {title: "Seconds", minValue: 0}}';
+    $graph_draw_js .= '{';
+    $graph_draw_js .= 'title:"' . $options['title'] . '",';
+    $graph_draw_js .= 'width:\'' . $options['width'] . '\',';
+    $graph_draw_js .= 'height:\'' . $options['height'] . '\',';
+
+    if(!empty($options['h-title'])){
+        $graph_draw_js .= 'hAxis: {title: "' . $options['h-title'] . '"},';
+    }
+
+    if(!empty($options['v-title'])){
+        $graph_draw_js .= 'vAxis: {title: "' . $options['v-title'] . '", minValue: 0}'
+    } else {
+        $graph_draw_js .= 'vAxis: {minValue: 0}'
+    }
+
+    $graph_draw_js .= '}';
 
     $graph_draw_js .= ');';
 
