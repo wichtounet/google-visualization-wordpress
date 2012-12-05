@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Plugin Name: Google Visualization Charts
  * Plugin URI: https://github.com/wichtounet/google-visualization-wordpress 
@@ -105,7 +104,7 @@ function visualization_bar_chart_shortcode( $atts, $content = null ) {
     $graph_draw_js .= '};';
 
     //Draw the chart
-    $graph_draw_js .= 'draw(data, options);';
+    $graph_draw_js .= 'graph.draw(data, options);';
 
     $graph_draw_js .= '}';
     $graph_draw_js .= '</script>';
