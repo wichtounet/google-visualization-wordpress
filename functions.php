@@ -60,12 +60,13 @@ function visualization_bar_chart_shortcode( $atts, $content = null ) {
             'v_title' => "",
             
             //By default give iterated id to the graph
-            'id' => "graph_id" + count($graph_ids),
+            'id' => "graph_" . count($graph_ids),
         ), $atts );
 
     //Register the graph ID
     $graph_ids[] = $options['id'];
 
+    //The content that will replace the short code
     $graph_content = "";
 
     //Generate the div
@@ -77,14 +78,16 @@ function visualization_bar_chart_shortcode( $atts, $content = null ) {
     $graph_draw_js .= '<script type="text/javascript">';
     $graph_draw_js .= 'function draw_' . $options['id'] . '(){';
 
+    //Create the graph
+    $graph_draw_js .= 'var graph = new google.visualization.ColumnChart(document.getElementById(\'' . $options['id'] . '\'));';
+
+    //Create the data
     $graph_draw_js .= 'var data = google.visualization.arrayToDataTable([';
     $graph_draw_js .= str_replace(array('<br/>', '<br />'), '', $content);
     $graph_draw_js .= ']);';
 
-    $graph_draw_js .= 'new google.visualization.ColumnChart(document.getElementById(\'' . $options['id'] . '\')).';
-    $graph_draw_js .= 'draw(data, ';
-
-    $graph_draw_js .= '{';
+    //Create the options
+    $graph_draw_js .= 'var options = {';
     $graph_draw_js .= 'title:"' . $options['title'] . '",';
     $graph_draw_js .= 'width:\'' . $options['width'] . '\',';
     $graph_draw_js .= 'height:\'' . $options['height'] . '\',';
@@ -99,13 +102,15 @@ function visualization_bar_chart_shortcode( $atts, $content = null ) {
         $graph_draw_js .= 'vAxis: {minValue: 0}';
     }
 
-    $graph_draw_js .= '}';
+    $graph_draw_js .= '};';
 
-    $graph_draw_js .= ');';
+    //Draw the chart
+    $graph_draw_js .= 'draw(data, options);';
 
     $graph_draw_js .= '}';
     $graph_draw_js .= '</script>';
 
+    //Append the JS to the content of the page
     $graph_content .= $graph_draw_js;
 
     return $graph_content;
@@ -127,12 +132,13 @@ function visualization_line_chart_shortcode( $atts, $content = null ) {
             'v_title' => "",
             
             //By default give iterated id to the graph
-            'id' => "graph_id" + count($graph_ids),
+            'id' => "graph_" . count($graph_ids),
         ), $atts );
 
     //Register the graph ID
     $graph_ids[] = $options['id'];
 
+    //The content that will replace the shortcode
     $graph_content = "";
 
     //Generate the div
@@ -144,12 +150,15 @@ function visualization_line_chart_shortcode( $atts, $content = null ) {
     $graph_draw_js .= '<script type="text/javascript">';
     $graph_draw_js .= 'function draw_' . $options['id'] . '(){';
 
+    //Create the graph
+    $graph_draw_js .= 'var graph = new google.visualization.LineChart(document.getElementById(\'' . $options['id'] . '\'));';
+
+    //Populate the data
     $graph_draw_js .= 'var data = google.visualization.arrayToDataTable([';
     $graph_draw_js .= str_replace(array('<br/>', '<br />'), '', $content);
     $graph_draw_js .= ']);';
 
-    $graph_draw_js .= 'var graph = new google.visualization.LineChart(document.getElementById(\'' . $options['id'] . '\'));';
-
+    //Create the options
     $graph_draw_js .= 'var options = {';
     $graph_draw_js .= 'curveType: "function", ';
     $graph_draw_js .= 'animation: {duration: 1200, easing:"in"}, ';
